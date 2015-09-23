@@ -1,7 +1,7 @@
 <!-- TMPL_INCLUDE "tmpl/head.tmpl" -->
 <div class="content">
     <div class="line">
-        <span><!-- TMPL_VAR CUSTOMER.CID --></span>
+        <span><a href="/customer?id=<!-- TMPL_VAR CUSTOMER.CID -->"><!-- TMPL_VAR CUSTOMER.CID --></a></span>
         <span><!-- TMPL_VAR CUSTOMER.NAME --></span>
         <span class="balance" value="<!-- TMPL_VAR CUSTOMER.BALANCE -->"><!-- TMPL_VAR CUSTOMER.BALANCE --></span>
     </div>
@@ -12,14 +12,16 @@
                 <th>NAME</th>
                 <th>AMOUNT</th>
                 <th>BALANCE</th>
+                <th>DATE</th>
             </tr>
         </thead>
         <tbody>
             <!-- TMPL_LOOP rows -->
             <tr>
-                <td><a href="/bill?id=<!-- TMPL_VAR bid -->"><!-- TMPL_VAR name --></a></td>
+                <td><a href="/bill?id=<!-- TMPL_VAR bid -->&customer=<!-- TMPL_VAR customer -->"><!-- TMPL_VAR name --></a></td>
                 <td value="<!-- TMPL_VAR amount -->"><!-- TMPL_VAR amount --></td>
                 <td><!-- TMPL_VAR balance --></td>
+                <td class="fmt-date"><!-- TMPL_VAR cdate --></td>
             </tr>
             <!-- /TMPL_LOOP -->
         </tbody>
@@ -29,11 +31,11 @@
             <p>
                 <input type="hidden" name="customer" value="<!-- TMPL_VAR CUSTOMER.CID -->"/>
                 <input type="text" name="name" placeholder="Bill NAME" autofocus="autofocus"/>
-                <input type="text" name="amount" placeholder="Bill AMOUNT" value="-"/>
-                <input type="submit" value="+ BILL"/>
+                <input type="text" name="amount" placeholder="Bill AMOUNT ( + )"/>
             </p>
             <p>
-                <textarea name="note" placeholder="Bill NOTE" cols="49"></textarea>
+                <input type="text" name="note" placeholder="Bill NOTE" style="width:27.2em;"/>
+                <input type="submit" value="+ BILL"/>
             </p>
         </form>
     </div>

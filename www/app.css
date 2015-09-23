@@ -63,6 +63,16 @@ span.balance{
 span.balance[value^="-"]{
     color: #C00;
 }
+div.bill>div{
+    margin: 0.3em 0;
+}
+div.bill>div>span{
+    color: #888;
+    display: inline-block;
+    width: 5em;
+    text-align: right;
+    padding-right: 0.5em;
+}
 input{
     line-height: 1.5em;
 }
@@ -126,6 +136,18 @@ input[type=submit]:hover{
     background-color: #1E70BF;
     color: #FFF;
     padding: 4px 0.3em;    
+}
+.content>.line>span:first-child>a{
+    background-color: #1E70BF;
+    color: #FFF;
+    cursor: pointer;
+    line-height: normal;
+}
+.message{
+    color: #FFF;
+    background-color: #EAAE00;
+    padding: 1em;
+    font-weight: bold;
 }
 .btn{
     font-weight: bold;

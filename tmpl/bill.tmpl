@@ -1,0 +1,27 @@
+<!-- TMPL_INCLUDE "tmpl/head.tmpl" -->
+<div class="content">
+    <div class="line">
+        <span><a href="/customer?id=<!-- TMPL_VAR CUSTOMER.CID -->"><!-- TMPL_VAR CUSTOMER.CID --></a></span>
+        <span><!-- TMPL_VAR CUSTOMER.NAME --></span>
+        <span class="balance" value="<!-- TMPL_VAR CUSTOMER.BALANCE -->"><!-- TMPL_VAR CUSTOMER.BALANCE --></span>
+    </div>
+    <hr>
+    <div class="bill">
+        <div>
+            <span>NO.: </span><!-- TMPL_VAR bid -->
+        </div>
+        <div>
+            <span>NAME: </span><!-- TMPL_VAR name -->
+        </div>
+        <div>
+            <span>AMOUNT: </span><!-- TMPL_VAR amount -->
+        </div>
+        <div>
+            <span>BALANCE: </span><!-- TMPL_VAR balance -->
+        </div>
+        <div>
+            <span>NOTE: </span><!-- TMPL_VAR note -->
+        </div>
+    </div>
+</div>
+<!-- TMPL_INCLUDE "tmpl/foot.tmpl" -->

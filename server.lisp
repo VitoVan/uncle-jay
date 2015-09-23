@@ -95,7 +95,7 @@
 
 (defun db-find-bill (customer &key bid)
   (let* ((result (docs (db.find "bill"
-                                (kv "customer" customer
+                                (kv (kv "customer" customer)
                                     (if bid
                                         (kv "bid" bid))) :limit 0))))
     (if bid
@@ -166,6 +166,18 @@
          (name (parameter "name")))
     (db-add-customer cid :name name)))
 
+(defun ctl-bill()
+  (let* ((bid (parameter "id"))
+         (customer (parameter "customer"))
+         (customer-result (document->ht (db-find-customer :cid customer)))
+         (customer-result-klist (hash-table-klist (sethash 'customer customer-result (make-hash-table))))
+         (bill-doc (db-find-bill customer :bid (parse-integer bid :junk-allowed t)))
+         (values (append customer-result-klist (hash-table-klist (document->ht bill-doc))))
+         (tmpl-path #p"tmpl/bill.tmpl"))
+    (with-output-to-string (*default-template-output*)
+      (fill-and-print-template tmpl-path
+                               values))))
+
 (defun ctl-add-bill()
   (let* ((customer (parameter "customer"))
          (name (parameter "name"))
@@ -178,6 +190,7 @@
        (create-regex-dispatcher "^/hello$" 'ctl-hello)
        (create-regex-dispatcher "^/customer$" 'ctl-customer)
        (create-regex-dispatcher "^/customer/add$" 'ctl-add-customer)
+       (create-regex-dispatcher "^/bill$" 'ctl-bill)
        (create-regex-dispatcher "^/bill/add$" 'ctl-add-bill)))
 
 (start-server)
