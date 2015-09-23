@@ -1,0 +1,29 @@
+<!-- tmpl_include "tmpl/head.tmpl" -->
+<div class="content">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>BALANCE</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- TMPL_LOOP rows -->
+            <tr>
+                <td><a href="/customer?id=<!-- TMPL_VAR cid -->"><!-- TMPL_VAR cid --></a></td>
+                <td><!-- TMPL_VAR name --></td>
+                <td><!-- TMPL_VAR balance --></td>
+            </tr>
+            <!-- /TMPL_LOOP -->
+        </tbody>
+    </table>
+    <div>
+        <form method="POST" action="/customer/add">
+            <input type="text" name="cid" placeholder="Customer ID"/>
+            <input type="text" name="name" placeholder="Customer NAME"/>
+            <input type="submit" value="+ CUSTOMER"/>
+        </form>
+    </div>
+</div>
+<!-- tmpl_include "tmpl/foot.tmpl" -->

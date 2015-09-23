@@ -1,0 +1,128 @@
+body{
+    font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans",Tahoma,"Hiragino Sans GB","Microsoft Yahei","微软雅黑",sans-serif;
+    color: #000;
+    background: #FFF none repeat scroll 0% 0%;
+    font-size: 10pt;
+    clear: both;
+    padding: 0;
+    margin: 0;
+}
+*{
+    margin: 0;
+    padding: 0;
+}
+a{
+    background: transparent none repeat scroll 0px 0px;
+    color: #4183C4;
+    text-decoration: none;
+    line-height: 2em;
+    margin: 0 0.1em;
+}
+a:hover{
+    color: #1E70BF;
+    text-decoration: none;
+}
+table{
+    width: 100%;
+    background: #FFF none repeat scroll 0% 0%;
+    margin: 1em 0em;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    border-radius: 0.3em;
+    box-shadow: none;
+    text-align: left;
+    color: rgba(0, 0, 0, 0.87);
+    border-collapse: separate;
+    border-spacing: 0px;
+}
+thead th {
+    cursor: auto;
+    background: #E0E0E0;
+    text-align: inherit;
+    color: rgba(0, 0, 0, 0.87);
+    padding: 0.428571em 0.714286em;
+    vertical-align: inherit;
+    font-weight: bold;
+    text-transform: none;
+    border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+    border-left: medium none;
+}
+table tr:hover{
+    background-color: #E0E1E2;
+    cursor: pointer;
+}
+table td{
+    padding: 0.714286em;
+    text-align: inherit;
+}
+input{
+    line-height: 1.5em;
+}
+input[type=text]{
+    padding: 0 1em 0 0;
+    border-width: 0 0 1px 0;
+    border-color: black;
+    border-style: solid;
+}
+input[type=submit]{
+    border-width: 1px;
+    border-style: solid;
+    border-color: #C00;
+    background-color: #FFF;
+    color: #C00;
+    cursor: pointer;
+}
+input[type=submit]:hover{
+    background-color: #C00;
+    color: white;
+}
+.head{
+    height: 2em;
+    background-color: #EEE;
+}
+.head>ul{
+    list-style: none;
+}
+.head>ul>li{
+    font-weight: bold;
+    float: left;
+}
+.head>ul>li.current{
+    background-color: #BABBBC;
+}
+.head>ul>li.current>a{
+    color: rgba(0, 0, 0, 0.9);
+}
+.head>ul>li>a{
+    padding: 0 1em;
+    display: block;
+}
+.content{
+    margin: 1em 2em;
+}
+.content>.line{
+    margin: 0.3em 0;
+}
+.content>.line>span:first-child{
+    font-weight: bold;
+    background-color: black;
+    color: white;
+    padding: 0 0.3em;
+}
+.btn{
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 0.5em;
+    color: blue;
+}
+.btn:hover{
+    color: darkblue;
+}
+.foot{
+    border-top: 0.2em solid #EEE;
+    position: absolute;
+    bottom: 0px;
+    text-align: center;
+    width: 100%;
+    line-height: 1.4em;
+    color: #777;
+}
