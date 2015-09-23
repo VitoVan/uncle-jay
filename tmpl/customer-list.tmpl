@@ -1,4 +1,4 @@
-<!-- tmpl_include "tmpl/head.tmpl" -->
+<!-- TMPL_INCLUDE "tmpl/head.tmpl" -->
 <div class="content">
     <table>
         <thead>
@@ -19,11 +19,11 @@
         </tbody>
     </table>
     <div>
-        <form method="POST" action="/customer/add">
-            <input type="text" name="cid" placeholder="Customer ID"/>
+        <form method="POST" action="/customer/add" target="_blank">
+            <input type="text" name="cid" placeholder="Customer ID" autofocus="autofocus"/>
             <input type="text" name="name" placeholder="Customer NAME"/>
             <input type="submit" value="+ CUSTOMER"/>
         </form>
     </div>
 </div>
-<!-- tmpl_include "tmpl/foot.tmpl" -->
+<!-- TMPL_INCLUDE "tmpl/foot.tmpl" -->

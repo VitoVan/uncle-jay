@@ -3,8 +3,14 @@
 (ql:quickload '(cl-json hunchentoot cl-mongo html-template alexandria))
 
 (in-package :cl-mongo)
-(defmacro sethash(key value hash-table)
-  `(setf (gethash ,key ,hash-table) ,value))
+(defun sethash(key value hash-table)
+  (if (hash-table-p value)
+      (dolist (x (alexandria:hash-table-keys value))
+        (sethash (concatenate 'string (string key) "." x) (gethash x value) hash-table))
+      (progn
+        (remhash key hash-table)
+        (setf (gethash key hash-table) value)))
+  hash-table)
 
 (defun document->ht (doc/docs)
   "Convert a document to a hash-table, recursively."
@@ -21,6 +27,7 @@
      (bson-time-to-ut doc/docs))
     (t doc/docs)))
 (export 'document->ht)
+(export 'sethash)
 
 (in-package :alexandria)
 (defun hash-table-klist (table/table-list &optional parent)
@@ -77,27 +84,100 @@
       (progn
         (db.insert "customer"
                    (add-element "cdate" (get-universal-time)
-                                (add-element "balance" 0
-                                             (add-element "name" name
-                                                          (add-element "cid" cid (make-document))))))
+                                (add-element "bill-no" 0
+                                             (add-element "balance" 0
+                                                          (add-element "name" name
+                                                                       (add-element "cid" cid (make-document)))))))
         "Insert Ok.")))
 
 (defun db-del-customer (cid)
   (db.delete "customer" (db-find-customer :cid cid)))
 
-(defun controller-hello()
+(defun db-find-bill (customer &key bid)
+  (let* ((result (docs (db.find "bill"
+                                (kv "customer" customer
+                                    (if bid
+                                        (kv "bid" bid))) :limit 0))))
+    (if bid
+        (car result)
+        result)))
+
+(defun gen-bid (customer)
+  (let* ((bill-no (1+ (or (get-element "bill-no" (db-find-customer :cid customer)) 0))))
+    (db.update
+     "customer"
+     ($ "cid" customer)
+     (kv ($set "bill-no" bill-no)))
+    bill-no))
+
+(defun cal-balance (customer amount)
+  (db.update
+     "customer"
+     ($ "cid" customer)
+     (kv ($inc "balance" amount))))
+
+(defun db-add-bill (customer name amount &key note)
+  (let* ((customer-doc (db-find-customer :cid customer))
+         (customer-balance (get-element "balance" customer-doc))
+         (current-balance (+ customer-balance amount)))
+    (db.insert "bill"
+               (add-element "cdate" (get-universal-time)
+                            (add-element "amount" amount
+                                         (add-element "name" name
+                                                      (add-element "customer" customer
+                                                                   (add-element "balance" current-balance
+                                                                                (add-element "note" note
+                                                                                             (add-element "bid" (gen-bid customer) (make-document)))))))))
+    (cal-balance customer amount)
+    "Insert Ok."))
+
+(defun db-discard-bill (bid customer)
+  (db.update
+   "bill"
+   (kv ($ "bid" bid) ($ "customer" customer))
+   (kv ($set "discard" t))))
+
+(defun ctl-hello()
   (with-output-to-string (*default-template-output*)
     (fill-and-print-template #p"tmpl/hello.tmpl" '(:name "Vito"))))
 
-(defun controller-customer()
-  (with-output-to-string (*default-template-output*)
-    (fill-and-print-template #p"tmpl/customer.tmpl"
-                             `(:customer t
-                                         :rows ,(hash-table-klist (document->ht (db-find-customer)))))))
+(defun ctl-customer()
+  (let* ((cid (parameter "id"))
+         (customer-result (document->ht (db-find-customer :cid cid)))
+         (bill-result-klist (hash-table-klist (list (document->ht (db-find-bill cid)))))
+         (customer-result-klist (hash-table-klist
+                                 (if cid
+                                     (sethash 'customer customer-result (make-hash-table))
+                                     (list customer-result))))
+         (tmpl-path (if cid #p"tmpl/customer-single.tmpl" #p"tmpl/customer-list.tmpl"))
+         (values (cons :customer
+                       (cons t
+                             (if cid
+                                 (append customer-result-klist
+                                         (cons :rows bill-result-klist))
+                                 (cons :rows customer-result-klist))))))
+    (log-message* *log-lisp-warnings-p* (format nil "FFFFFFFFFFFFF::  ~A~%" values))
+    (with-output-to-string (*default-template-output*)
+      (fill-and-print-template tmpl-path
+                               values))))
+
+(defun ctl-add-customer()
+  (let* ((cid (parameter "cid"))
+         (name (parameter "name")))
+    (db-add-customer cid :name name)))
+
+(defun ctl-add-bill()
+  (let* ((customer (parameter "customer"))
+         (name (parameter "name"))
+         (amount (parse-integer (parameter "amount") :junk-allowed t))
+         (note (parameter "note")))
+    (db-add-bill customer name amount :note note)))
 
 (setf *dispatch-table*
       (list
-       (create-regex-dispatcher "^/hello$" 'controller-hello)
-       (create-regex-dispatcher "^/customer$" 'controller-customer)))
+       (create-regex-dispatcher "^/hello$" 'ctl-hello)
+       (create-regex-dispatcher "^/customer$" 'ctl-customer)
+       (create-regex-dispatcher "^/customer/add$" 'ctl-add-customer)
+       (create-regex-dispatcher "^/bill/add$" 'ctl-add-bill)))
 
 (start-server)

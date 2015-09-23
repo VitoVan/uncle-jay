@@ -1,4 +1,4 @@
-body{
+textarea,body{
     font-family: "Helvetica Neue","Luxi Sans","DejaVu Sans",Tahoma,"Hiragino Sans GB","Microsoft Yahei","微软雅黑",sans-serif;
     color: #000;
     background: #FFF none repeat scroll 0% 0%;
@@ -48,11 +48,20 @@ thead th {
 }
 table tr:hover{
     background-color: #E0E1E2;
-    cursor: pointer;
 }
 table td{
     padding: 0.714286em;
     text-align: inherit;
+}
+table td[value^="-"] {
+    color: #C00;
+}
+span.balance{
+    font-weight: bold;
+    color: blue;
+}
+span.balance[value^="-"]{
+    color: #C00;
 }
 input{
     line-height: 1.5em;
@@ -62,6 +71,16 @@ input[type=text]{
     border-width: 0 0 1px 0;
     border-color: black;
     border-style: solid;
+}
+textarea{
+    line-height: 1.5em;
+    padding: 0.3em;
+    border-width: 1px;
+    border-color: black;
+    border-style: solid;
+}
+p{
+    margin: 1em 0;
 }
 input[type=submit]{
     border-width: 1px;
@@ -104,9 +123,9 @@ input[type=submit]:hover{
 }
 .content>.line>span:first-child{
     font-weight: bold;
-    background-color: black;
-    color: white;
-    padding: 0 0.3em;
+    background-color: #1E70BF;
+    color: #FFF;
+    padding: 4px 0.3em;    
 }
 .btn{
     font-weight: bold;

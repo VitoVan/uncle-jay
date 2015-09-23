@@ -1,0 +1,41 @@
+<!-- TMPL_INCLUDE "tmpl/head.tmpl" -->
+<div class="content">
+    <div class="line">
+        <span><!-- TMPL_VAR CUSTOMER.CID --></span>
+        <span><!-- TMPL_VAR CUSTOMER.NAME --></span>
+        <span class="balance" value="<!-- TMPL_VAR CUSTOMER.BALANCE -->"><!-- TMPL_VAR CUSTOMER.BALANCE --></span>
+    </div>
+    <hr>
+    <table>
+        <thead>
+            <tr>
+                <th>NAME</th>
+                <th>AMOUNT</th>
+                <th>BALANCE</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- TMPL_LOOP rows -->
+            <tr>
+                <td><a href="/bill?id=<!-- TMPL_VAR bid -->"><!-- TMPL_VAR name --></a></td>
+                <td value="<!-- TMPL_VAR amount -->"><!-- TMPL_VAR amount --></td>
+                <td><!-- TMPL_VAR balance --></td>
+            </tr>
+            <!-- /TMPL_LOOP -->
+        </tbody>
+    </table>
+    <div>
+        <form method="POST" action="/bill/add" target="_blank">
+            <p>
+                <input type="hidden" name="customer" value="<!-- TMPL_VAR CUSTOMER.CID -->"/>
+                <input type="text" name="name" placeholder="Bill NAME" autofocus="autofocus"/>
+                <input type="text" name="amount" placeholder="Bill AMOUNT" value="-"/>
+                <input type="submit" value="+ BILL"/>
+            </p>
+            <p>
+                <textarea name="note" placeholder="Bill NOTE" cols="49"></textarea>
+            </p>
+        </form>
+    </div>
+</div>
+<!-- TMPL_INCLUDE "tmpl/foot.tmpl" -->
