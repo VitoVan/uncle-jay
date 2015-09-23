@@ -29,6 +29,9 @@ $(document).ready(function(){
     });
     //format date
     $('.fmt-date').each(function(index,obj){
-        
+        var universalDate = parseInt($(obj).text());
+        var unixDate = universalDate - 2208988800;
+        var jsDate = new Date(unixDate * 1000);
+        $(obj).text(jsDate.pattern("yyyy-MM-dd"));
     });
 });

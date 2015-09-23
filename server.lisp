@@ -69,6 +69,8 @@
   (start *acceptor*)
   (format t "Server started at 5000"))
 
+;;--------------------------- LOGIC ----------------------------
+
 (defun db-find-customer (&key cid)
   (let* ((result (docs (db.find "customer"
                                 (if cid
@@ -137,29 +139,43 @@
    (kv ($ "bid" bid) ($ "customer" customer))
    (kv ($set "discard" t))))
 
+;;--------------------------- CTL ----------------------------
+
 (defun ctl-hello()
   (with-output-to-string (*default-template-output*)
     (fill-and-print-template #p"tmpl/hello.tmpl" '(:name "Vito"))))
 
+(defun build-attr(doc &key key prefix)
+  (let* ((ht0 (document->ht doc))
+         (ht1 (if prefix
+                  (sethash prefix ht0 (make-hash-table))
+                  (list ht0)))
+         (klist0 (hash-table-klist ht1))
+         (klist1 (if key
+                     (cons (intern (string-upcase key) "KEYWORD") klist0)
+                     klist0)))
+    klist1))
+
+(defmacro add-attr(doc &key key prefix)
+  `(setf values (append (build-attr ,doc :key ,key :prefix ,prefix) values)))
+
+(defmacro tmpl-out()
+  `(with-output-to-string (*default-template-output*)
+     (fill-and-print-template tmpl-path
+                              values)))
+
 (defun ctl-customer()
   (let* ((cid (parameter "id"))
-         (customer-result (document->ht (db-find-customer :cid cid)))
-         (bill-result-klist (hash-table-klist (list (document->ht (db-find-bill cid)))))
-         (customer-result-klist (hash-table-klist
-                                 (if cid
-                                     (sethash 'customer customer-result (make-hash-table))
-                                     (list customer-result))))
+         (customer-doc (db-find-customer :cid cid))
+         (bill-doc (db-find-bill cid))
          (tmpl-path (if cid #p"tmpl/customer-single.tmpl" #p"tmpl/customer-list.tmpl"))
-         (values (cons :customer
-                       (cons t
-                             (if cid
-                                 (append customer-result-klist
-                                         (cons :rows bill-result-klist))
-                                 (cons :rows customer-result-klist))))))
-    (log-message* *log-lisp-warnings-p* (format nil "FFFFFFFFFFFFF::  ~A~%" values))
-    (with-output-to-string (*default-template-output*)
-      (fill-and-print-template tmpl-path
-                               values))))
+         (values '(:customer t)))
+    (if cid
+        (progn
+          (add-attr bill-doc :key "rows")
+          (add-attr customer-doc :prefix "customer"))
+        (add-attr customer-doc :key "rows"))
+    (tmpl-out)))
 
 (defun ctl-add-customer()
   (let* ((cid (parameter "cid"))
@@ -169,14 +185,13 @@
 (defun ctl-bill()
   (let* ((bid (parameter "id"))
          (customer (parameter "customer"))
-         (customer-result (document->ht (db-find-customer :cid customer)))
-         (customer-result-klist (hash-table-klist (sethash 'customer customer-result (make-hash-table))))
+         (customer-doc (db-find-customer :cid customer))
          (bill-doc (db-find-bill customer :bid (parse-integer bid :junk-allowed t)))
-         (values (append customer-result-klist (hash-table-klist (document->ht bill-doc))))
+         (values '(:customer t))
          (tmpl-path #p"tmpl/bill.tmpl"))
-    (with-output-to-string (*default-template-output*)
-      (fill-and-print-template tmpl-path
-                               values))))
+    (add-attr customer-doc :prefix "customer")
+    (add-attr bill-doc :prefix "bill")
+    (tmpl-out)))
 
 (defun ctl-add-bill()
   (let* ((customer (parameter "customer"))

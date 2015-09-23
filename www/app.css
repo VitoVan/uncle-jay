@@ -89,6 +89,12 @@ textarea{
     border-color: black;
     border-style: solid;
 }
+textarea.info{
+    width: 50%;
+    vertical-align: top;
+    border: none;
+    cursor: default;
+}
 p{
     margin: 1em 0;
 }
