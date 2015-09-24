@@ -34,4 +34,10 @@ $(document).ready(function(){
         var jsDate = new Date(unixDate * 1000);
         $(obj).text(jsDate.pattern("yyyy-MM-dd"));
     });
+    //hide functions
+    $('.function').hide();
+    $('.function-expand-btn').on('click',function(){
+        $(this).hide();
+        $('.function').show();
+    });
 });

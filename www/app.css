@@ -12,6 +12,7 @@ textarea,body{
     padding: 0;
 }
 a{
+    cursor: pointer;
     background: transparent none repeat scroll 0px 0px;
     color: #4183C4;
     text-decoration: none;
@@ -163,6 +164,9 @@ input[type=submit]:hover{
 }
 .btn:hover{
     color: darkblue;
+}
+.function-expand-btn{
+    text-decoration: underline;
 }
 .foot{
     border-top: 0.2em solid #EEE;

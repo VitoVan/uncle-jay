@@ -93,7 +93,10 @@
         "Insert Ok.")))
 
 (defun db-del-customer (cid)
-  (db.delete "customer" (db-find-customer :cid cid)))
+  (progn
+    (db.delete "customer" (db-find-customer :cid cid))
+    (db.delete "bill" (db-find-bill cid))
+    "Del Ok."))
 
 (defun db-find-bill (customer &key bid)
   (let* ((result (docs (db.find "bill"
@@ -182,6 +185,10 @@
          (name (parameter "name")))
     (db-add-customer cid :name name)))
 
+(defun ctl-del-customer()
+  (let* ((cid (parameter "cid")))
+    (db-del-customer cid)))
+
 (defun ctl-bill()
   (let* ((bid (parameter "id"))
          (customer (parameter "customer"))
@@ -205,6 +212,7 @@
        (create-regex-dispatcher "^/hello$" 'ctl-hello)
        (create-regex-dispatcher "^/customer$" 'ctl-customer)
        (create-regex-dispatcher "^/customer/add$" 'ctl-add-customer)
+       (create-regex-dispatcher "^/customer/del$" 'ctl-del-customer)
        (create-regex-dispatcher "^/bill$" 'ctl-bill)
        (create-regex-dispatcher "^/bill/add$" 'ctl-add-bill)))
 

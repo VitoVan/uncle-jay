@@ -19,11 +19,20 @@
         </tbody>
     </table>
     <div>
-        <form method="POST" action="/customer/add" target="_blank">
-            <input type="text" name="cid" placeholder="Customer ID" autofocus="autofocus"/>
-            <input type="text" name="name" placeholder="Customer NAME"/>
-            <input type="submit" value="+ CUSTOMER"/>
-        </form>
+        <p><a class="function-expand-btn">Expand Functions</a></p>
+        <p>
+            <form method="POST" action="/customer/add" target="_blank" class="function">
+                <input type="text" name="cid" placeholder="Customer ID" autofocus="autofocus"/>
+                <input type="text" name="name" placeholder="Customer NAME"/>
+                <input type="submit" value="+ CUSTOMER"/>
+            </form>
+        </p>
+        <p>
+            <form method="POST" action="/customer/del" target="_blank" class="function">
+                <input type="text" name="cid" placeholder="Customer ID" autofocus="autofocus"/>
+                <input type="submit" value="DEL CUSTOMER"/>
+            </form>
+        </p>
     </div>
 </div>
 <!-- TMPL_INCLUDE "tmpl/foot.tmpl" -->
